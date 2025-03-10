@@ -42,19 +42,12 @@ public class BookishController : Controller
         {
             return View(book);
         }
-
-        // var books = from aBook in _context.Book
-        //     select aBook;
         
-        // Book? duplicateBook = books.Where(aBook => aBook.Title == book.Title && aBook.Author == book.Author).FirstOrDefault();
-        // if (duplicateBook == null)
         {
             _context.Book.Add(new Book(book.Title, book.Author));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        // ViewData["ErrorMessage"] = "Sorry, you can't add this book because it already exists in the catalogue.";
-        // return View(book);
     }
 
     // GET: Bookish/EditBook/<int: id>
@@ -85,19 +78,50 @@ public class BookishController : Controller
 
         if (ModelState.IsValid)
         {
-            var books = from aBook in _context.Book
-                select aBook;
+            _context.Book.Update(book);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         
-            Book? duplicateBook = books.Where(aBook => aBook.Title == book.Title && aBook.Author == book.Author).FirstOrDefault();
-            if (duplicateBook == null)
-            {
-                _context.Book.Update(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
         }
         ViewData["ErrorMessage"] = "Sorry, you can't add this book because it already exists in the catalogue.";
         return View(book);
+    }
+
+    // GET: Bookish/DeleteBook/<int: id>
+    public async Task<IActionResult> DeleteBook(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var book = await _context.Book
+            .FirstOrDefaultAsync(aBook => aBook.Id == id);
+
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        return View(book);
+    }
+
+    // POST: Bookish/DeleteBook/<int: id>
+    [HttpPost, ActionName("DeleteBook")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ConfirmDelete(int? id)
+    {
+        var bookToDelete = await _context.Book
+            .FindAsync(id);
+            
+        if (bookToDelete == null)
+        {
+            return NotFound();
+        }
+
+        _context.Book.Remove(bookToDelete);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

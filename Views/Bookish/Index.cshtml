@@ -16,7 +16,7 @@
             <b>Title:</b> @Html.DisplayFor(modelItem => item.Title) |
             <b>Author:</b> @Html.DisplayFor(modelItem => item.Author) |
             <a asp-action="EditBook" asp-route-id="@item.Id">Edit</a> |
-            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            <a asp-action="DeleteBook" asp-route-id="@item.Id">Delete</a>
         </li>
         }
     </ul>

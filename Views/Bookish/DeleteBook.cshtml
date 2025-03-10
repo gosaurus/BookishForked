@@ -1,0 +1,69 @@
+@model Book
+
+@{
+    ViewData["Title"] = "Confirm deletion";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Confirm deletion</h1>
+    <p>@ViewData["BookTitle"]</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>
+                    <th>
+                        Book record
+                    </th>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Model.Id
+                </td>    
+                <td>
+                    @Model.Title
+                </td>    
+                <td>
+                    @Model.Author
+                </td>    
+            </tr>
+            <tr>
+                <td>
+                    <th>
+                        Linked items
+                    </th>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <th>
+                        items id
+                    </th>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                Row for each book item...
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <form asp-action="DeleteBook">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Confirm deletion" class="btn btn-danger" /> 
+    </form>
+    </div>
+</div>
