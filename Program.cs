@@ -1,3 +1,4 @@
+using Bookish;
 using Bookish.Database;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BookishDbContext>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateAsyncScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetService<BookishDbContext>();
+    if (context == null)
+    {
+        throw new ArgumentNullException(nameof(context), "Dbcontext unavailable");
+    }
+    await SeedData.Initialise(context);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
