@@ -4,56 +4,70 @@ using Bookish.Database;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using Bookish.Utils;
 
 namespace Bookish
 {
     public static class SeedData
     {
-        public static async Task Initialise(BookishDbContext context)
+        
+        public static async Task InitialiseBooks(BookishDbContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context), "Dbcontext can't be null");
             }
-            var Books = new List<Book>
+
+            if (context.Book.Any()) return;
+            
+            var bookDetails = DataExtractionHelper.SeedDataToList();
+            List<Book> booksToAdd = [];
+
+            for (var bookCount = 1; bookCount < bookDetails.Count; bookCount++)
             {
-                new Book { Title="Educated", Author="Tara Westover" },
-                new Book { Title="Unbearable lightness of being, The", Author="Milan Kundera" },
-                new Book { Title="Orlando", Author="Virginia Woolf" },
-                new Book { Title="Wolf Totem", Author="Jiang Rong" },
-                new Book { Title="Black Swan", Author="Nicolas Taleb" },
-                new Book { Title="Alice In Wonderland", Author="Lewis Carroll" },
+                List<string> bookRow = bookDetails[bookCount].Split(',').ToList();
+                //This does not handle titles that have ", The", followed by Author! 
+                if (bookRow.Count == 4 && bookRow[2] == " The")
+                {
+                    var newTitle = bookRow[1] + "," + bookRow[2];
+                    bookRow[1] = newTitle;
+                    bookRow.RemoveAt(2);
+                    Console.WriteLine($"Book at index 2= {bookRow[2]}");
+                }
+                booksToAdd.Add(new Book {Title = bookRow[1].Trim(['"']), Author = bookRow[2].Trim(['"'])});
             };
 
             var allBooks = await context.Book.ToListAsync();
 
-            foreach (var book in Books)
+            foreach (var book in booksToAdd)
             {
-                if (checkIfBookInDB(allBooks, book))
+                if (SeedDataHelpers.checkIfBookInDB(allBooks, book))
                     context.Add(book);
+            
+            await context.SaveChangesAsync();
             }
+        }
+
+        public static async Task InitialiseItems(BookishDbContext context) 
+        {
+            var allBooks = await context.Book.ToListAsync(); 
 
             if (!context.Item.Any())
             {
-                var Items = new List<Item>
-                { 
-                    new Item { Book=Books[0] },
-                    new Item { Book=Books[0] },
-                    new Item { Book=Books[0] },
-                    new Item { Book=Books[1]},
-                    new Item { Book=Books[1]},
-                    new Item { Book=Books[1]},
-                    new Item { Book=Books[2]},
-                    new Item { Book=Books[3]},
-                    new Item { Book=Books[4]},
-                    new Item { Book=Books[4]},
-                    new Item { Book=Books[4]},
-                    new Item { Book=Books[4]},
-                    new Item { Book=Books[5]},
-                    new Item { Book=Books[5]},
-                };
-                context.AddRange(Items);
+            
+                List<Item> Items = new List<Item>();
+                
+                for (var index = 1; index <= 50; index++)
+                {
+                    Book randomBook = allBooks[Random.Shared.Next(1,26)];
+                    if (randomBook != null)
+                    {
+                        Items.Add(new Item {BookId = randomBook.Id, Book = randomBook});
+                    }
                 }
+                context.AddRange(Items);
+            }
+                
             if (!context.User.Any())
             {
                 var Users = new List<User>
@@ -67,14 +81,6 @@ namespace Bookish
             }
             await context.SaveChangesAsync();
         }
-        public static bool checkIfBookInDB(List<Book> books, Book book)
-        {
-            foreach (Book bookInDb in books)
-            {
-                if (bookInDb.Title == book.Title)
-                        return false; 
-            }
-            return true;
-        }
+       
     }
 }

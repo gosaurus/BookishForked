@@ -17,7 +17,8 @@ using (var scope = app.Services.CreateAsyncScope())
     {
         throw new ArgumentNullException(nameof(context), "Dbcontext unavailable");
     }
-    await SeedData.Initialise(context);
+    await SeedData.InitialiseBooks(context);
+    await SeedData.InitialiseItems(context);
 }
 
 // Configure the HTTP request pipeline.

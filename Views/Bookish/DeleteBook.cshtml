@@ -10,54 +10,36 @@
     <table class="table">
         <thead>
             <tr>
-                <td>
-                    <th>
-                        Book record
-                    </th>
-                </td>
+                <th>@Html.DisplayNameFor(model => model.Id)</th>
+                <th>@Html.DisplayNameFor(model => model.Title)</th>
+                <th>@Html.DisplayNameFor(model => model.Author)</th>
             </tr>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Author)
-                </th>
+               <td>@Model.Id</td> 
+               <td>@Model.Title</td> 
+               <td>@Model.Author</td> 
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>
-                    @Model.Id
-                </td>    
-                <td>
-                    @Model.Title
-                </td>    
-                <td>
-                    @Model.Author
-                </td>    
+                <th>Item Id</th>
+                <th>Copy Id</th>
+                <th>Action</th>
             </tr>
             <tr>
-                <td>
-                    <th>
-                        Linked items
-                    </th>
-                </td>
+                <td>Dummy book 1</td>
+                <td>Copy 1</td>
+                <td>Delete copy</td>
             </tr>
             <tr>
-                <td>
-                    <th>
-                        items id
-                    </th>
-                </td>
+                <td>Dummy book 2</td>
+                <td>Copy 2</td>
+                <td>Delete copy</td>
             </tr>
             <tr>
-                <td>
-                Row for each book item...
-                </td>
+                <td>Dummy book 3</td>
+                <td>Copy 3</td>
+                <td>Delete copy</td>
             </tr>
         </tbody>
     </table>

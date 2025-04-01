@@ -1,6 +1,7 @@
 namespace Bookish.Database;
 using Microsoft.EntityFrameworkCore;
 using Bookish.Models;
+using Bookish.Utils;
 
 public class BookishDbContext : DbContext
 {
@@ -16,9 +17,16 @@ public class BookishDbContext : DbContext
         .UseCollation("case_insensitive");
         modelBuilder.Entity<Book>().Property(c => c.Author)
         .UseCollation("case_insensitive");
+
     }
+            
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     { 
-        optionsBuilder.UseNpgsql(@"Server=localhost;Port=5432;Database=bookish;User Id=bookish;Password=bookish;Include Error Detail=true");
+        if (!optionsBuilder.IsConfigured)
+
+        {
+            optionsBuilder.UseNpgsql(@"Server=localhost;Port=5432;Database=bookish;User Id=bookish;Password=bookish;Include Error Detail=true");
+        }
     }
 }
