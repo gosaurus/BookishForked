@@ -1,4 +1,5 @@
-@model Book
+@model Bookish.ViewModels.BookViewModel;
+
 
 @{
     ViewData["Title"] = "Confirm deletion";
@@ -10,55 +11,38 @@
     <table class="table">
         <thead>
             <tr>
-                <td>
-                    <th>
-                        Book record
-                    </th>
-                </td>
+                <th>@Html.DisplayNameFor(model => model.Id)</th>
+                <th>@Html.DisplayNameFor(model => model.Title)</th>
+                <th>@Html.DisplayNameFor(model => model.Author)</th>
             </tr>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Author)
-                </th>
+               <td>@Model.Id</td> 
+               <td>@Model.Title</td> 
+               <td>@Model.Author</td> 
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>
-                    @Model.Id
-                </td>    
-                <td>
-                    @Model.Title
-                </td>    
-                <td>
-                    @Model.Author
-                </td>    
+                <th>Item Id</th>
+                <th>Copy Number</th>
+                <th>Status</th>
             </tr>
+        @foreach (var item in Model.Items)
+        {
             <tr>
-                <td>
-                    <th>
-                        Linked items
-                    </th>
+                <td>@item.Id</td>
+                <td>Copy Id</td>
+                <td>@if (item.User == null)
+                {
+                    <span>Available</span>
+                }
+                else
+                    {
+                    <span>On loan to @item.User)</span>
+                }
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <th>
-                        items id
-                    </th>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                Row for each book item...
-                </td>
-            </tr>
+        </tr>
+        }
         </tbody>
     </table>
     <form asp-action="DeleteBook">
@@ -66,4 +50,5 @@
         <input type="submit" value="Confirm deletion" class="btn btn-danger" /> 
     </form>
     </div>
+
 </div>

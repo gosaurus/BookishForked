@@ -45,7 +45,7 @@ namespace Bookish.Migrations
                     b.HasIndex("Title", "Author")
                         .IsUnique();
 
-                    b.ToTable("Book");
+                    b.ToTable("Book", (string)null);
                 });
 
             modelBuilder.Entity("Bookish.Models.Item", b =>
@@ -68,7 +68,7 @@ namespace Bookish.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Item");
+                    b.ToTable("Item", (string)null);
                 });
 
             modelBuilder.Entity("Bookish.Models.User", b =>
@@ -89,7 +89,7 @@ namespace Bookish.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Bookish.Models.Item", b =>

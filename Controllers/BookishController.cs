@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Bookish.Models;
+using Bookish.ViewModels;
 using Bookish.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -58,12 +59,19 @@ public class BookishController : Controller
             return NotFound();
         }
         
-        var book = await _context.Book.FindAsync(id);
+        var book = await _context.Book
+            .Include(book => book.Items)
+            .FirstOrDefaultAsync(book => book.Id == id);
+
+        Console.WriteLine(book);
+
         if (book == null)
         {
             return NotFound();
         }
-        return View(book);
+
+        var viewBook = new BookViewModel(book);
+        return View(viewBook);
     }
     
     // POST: Bookish/EditBook/<int: id>
@@ -81,8 +89,8 @@ public class BookishController : Controller
             _context.Book.Update(book);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        
         }
+        
         ViewData["ErrorMessage"] = "Sorry, you can't add this book because it already exists in the catalogue.";
         return View(book);
     }
@@ -96,14 +104,16 @@ public class BookishController : Controller
         }
 
         var book = await _context.Book
-            .FirstOrDefaultAsync(aBook => aBook.Id == id);
-
+            .Include(book => book.Items)
+            .FirstOrDefaultAsync(book => book.Id == id);
+        
         if (book == null)
         {
             return NotFound();
         }
 
-        return View(book);
+        var viewBook = new BookViewModel(book);
+        return View(viewBook);
     }
 
     // POST: Bookish/DeleteBook/<int: id>

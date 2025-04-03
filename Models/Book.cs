@@ -7,11 +7,8 @@ public class Book
 {
     public int Id { get; set; }
     public string Title { get; set; }
-
     public string Author { get; set; }
-
-    public ICollection<Item>? Items { get; set; }
-
+    public virtual ICollection<Item>? Items { get; set; }
     public Book() {}
     public Book(int id, string title, string author)
     {
@@ -25,4 +22,9 @@ public class Book
         Author = author;
     }
 
+    public override string ToString()
+    {
+        return $"Books has Items Count: {Items?.Count}";
+    } 
+    
 }
